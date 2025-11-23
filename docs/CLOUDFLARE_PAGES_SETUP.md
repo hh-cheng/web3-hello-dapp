@@ -15,7 +15,17 @@ Build command: pnpm install --frozen-lockfile && cd apps/hello-dapp && pnpm cf:b
 Build output directory: apps/hello-dapp/.vercel/output/static
 ```
 
-### Step 2: Environment Variables
+### Step 2: Set Compatibility Flags
+
+**IMPORTANT:** Cloudflare Pages doesn't read `wrangler.toml` from the project root. You need to set compatibility flags in the dashboard:
+
+1. Go to: **Settings → Functions → Compatibility flags**
+2. Add compatibility flag: `nodejs_compat`
+3. Set compatibility date: `2025-11-23` (or latest)
+
+**Alternative:** The project includes a `functions/wrangler.toml` file that should be automatically picked up. If it's not working, use the dashboard method above.
+
+### Step 3: Environment Variables
 
 Go to: **Settings → Environment variables**
 
@@ -29,7 +39,7 @@ WALLETCONNECT_PROJECT_ID = <your-project-id>
 
 **Also add for Preview** (if you want preview deployments to work)
 
-### Step 3: Deploy
+### Step 4: Deploy
 
 1. Go to **Deployments** tab
 2. Click **"Retry deployment"** or push a commit
@@ -73,6 +83,17 @@ Build output directory: .vercel/output/static
 
 ### Issue: Environment variables not working
 **Fix:** Ensure variables are set for Production AND Preview environments
+
+### Issue: Compatibility flags not working
+**Fix:** 
+1. Go to Settings → Functions → Compatibility flags in Cloudflare Dashboard
+2. Manually add `nodejs_compat` flag
+3. Set compatibility date to `2025-11-23` or latest
+4. Redeploy your project
+
+**Note:** The `wrangler.toml` in the project root is NOT read by Cloudflare Pages. You must set compatibility flags either:
+- In the dashboard (Settings → Functions → Compatibility flags), OR
+- Via a `functions/wrangler.toml` file (which this project includes)
 
 ---
 

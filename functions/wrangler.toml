@@ -1,0 +1,5 @@
+# Compatibility flags for Cloudflare Pages Functions
+# This file is automatically read by Cloudflare Pages
+compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2025-11-23"
+
