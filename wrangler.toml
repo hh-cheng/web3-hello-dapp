@@ -1,0 +1,3 @@
+name = "hello-web3-worker"
+compatibility_date = "2025-11-09"
+compatibility_flags = ["nodejs_compat"]
