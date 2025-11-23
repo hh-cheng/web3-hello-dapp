@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState, Component, type ReactNode } from 'react'
 import { formatUnits } from 'viem'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import {
@@ -28,7 +29,38 @@ import {
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu'
 
-export default function Wallet() {
+// Error boundary to catch WagmiProvider errors
+class WalletErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch() {
+    // Provider not ready yet
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center gap-2">
+          <ConnectButton />
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+function WalletContent() {
   const chains = useChains()
   const connection = useConnection()
 
@@ -215,5 +247,29 @@ export default function Wallet() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+export default function Wallet() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Show ConnectButton while component is mounting
+  if (!mounted) {
+    return (
+      <div className="flex items-center gap-2">
+        <ConnectButton />
+      </div>
+    )
+  }
+
+  // Wrap in error boundary to catch WagmiProvider errors
+  return (
+    <WalletErrorBoundary>
+      <WalletContent />
+    </WalletErrorBoundary>
   )
 }
