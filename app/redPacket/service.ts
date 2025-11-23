@@ -144,6 +144,18 @@ export default function useRedPacketService() {
           redPacketArtifact.abi,
           signer,
         )
+
+        contract.current.on('PacketCreated', (packetId: number) => {
+          toast.success(`Packet ${packetId} created successfully`)
+        })
+
+        contract.current.on('PacketGrabbed', (packetId, user, amount) => {
+          console.log('PacketGrabbed event received:', {
+            packetId,
+            user,
+            amount,
+          })
+        })
       })
     }
   }, [])
